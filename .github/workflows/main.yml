@@ -1,0 +1,27 @@
+name: Send Data to Photon
+
+on:
+  schedule:
+    - cron: '0 18 * * *'  # Every day at 12:00 UTC
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install urllib
+
+      - name: Run script
+        env:
+          PARTICLE_TOKEN: ${{ secrets.PARTICLE_TOKEN }}
+          PARTICLE_DEVICE_ID: ${{ secrets.PARTICLE_DEVICE_ID }}
+        run: python send_data.py
